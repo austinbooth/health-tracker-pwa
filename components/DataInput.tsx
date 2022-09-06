@@ -3,6 +3,8 @@ import InputAdornment from '@mui/material/InputAdornment'
 import TextField from '@mui/material/TextField'
 import NumberFormat, { InputAttributes } from 'react-number-format'
 import Button from '@mui/material/Button'
+import { submitValuesToDb } from '../subabaseUtils'
+import { WithAuthPageProps } from '../HOCs/withAuth'
 
 interface Values {
   weight: string
@@ -38,16 +40,27 @@ const NumberFormatCustom = forwardRef<
     );
   });
 
-const DataInput: FC = () => {
+const getPostgresDate = (): string => {
+  const dateObj = new Date()
+  const month = String(dateObj.getMonth() + 1).padStart(2, '0')
+  const day = String(dateObj.getDate()).padStart(2, '0')
+  const year = dateObj.getFullYear()
+  const date = year + "-" + month + "-" + day
+  return date
+}
+
+const DataInput: FC<WithAuthPageProps> = ({userId}) => {
   const [values, setValues] = useState<Values>({
     weight: '',
     steps: ''
   })
   
-  const todaysDate = new Date().toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
+  const todaysDate = new Date().toLocaleString('en-GB', { weekday: 'long', month: 'long', day: 'numeric' })
   const handleChange = (prop: keyof Values) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues((current) => ({ ...current, [prop]: event.target.value }))
   }
+  
+
   return (
     <>
       <h1 className="text-2xl font-bold py-4">
@@ -76,7 +89,14 @@ const DataInput: FC = () => {
       <Button
         variant="text"
         onClick={() => {
-          alert(`Weight: ${values.weight}, steps: ${values.steps}`)
+          const date = getPostgresDate()
+          submitValuesToDb({
+            date,
+            userId,
+            weight_kg: parseFloat(values.weight),
+            steps: parseInt(values.steps),
+          })
+          alert(`Weight: ${values.weight}, steps: ${values.steps} - submitted to DB`)
         }}
       >
         Submit

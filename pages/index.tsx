@@ -1,12 +1,11 @@
 import type { NextPage } from 'next'
-import AuthedPage from '../components/AuthedPage'
+import withAuth from '../HOCs/withAuth'
 import DataInput from '../components/DataInput'
 
 const Home: NextPage = () => {
+  const DataInputProtected = withAuth(DataInput)
   return (
-    <AuthedPage>
-      <DataInput />
-    </AuthedPage>
+    <DataInputProtected />
   )
 }
 
