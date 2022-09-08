@@ -1,9 +1,9 @@
-import { FC, useState, forwardRef } from 'react'
+import { FC, useState, forwardRef, useEffect } from 'react'
 import InputAdornment from '@mui/material/InputAdornment'
 import TextField from '@mui/material/TextField'
 import NumberFormat, { InputAttributes } from 'react-number-format'
 import Button from '@mui/material/Button'
-import { submitValuesToDb } from '../subabaseUtils'
+import { submitValuesToDb, getValuesForUserAndDate } from '../subabaseUtils'
 import { WithAuthPageProps } from '../HOCs/withAuth'
 
 interface Values {
@@ -60,6 +60,17 @@ const DataInput: FC<WithAuthPageProps> = ({userId}) => {
     setValues((current) => ({ ...current, [prop]: event.target.value }))
   }
   
+  useEffect(() => {
+    getValuesForUserAndDate({ userId, date: getPostgresDate()})
+      .then((data) => {
+        if (data) {
+          setValues({
+            weight: data.weight_kg ?? '',
+            steps: data.steps ?? '',
+          })
+        }
+      })
+  }, [todaysDate])
 
   return (
     <>
