@@ -23,3 +23,9 @@ export const getValuesForUserAndDate = async ({
     return data[0]
   }
 }
+
+export const getValuesForUser = async (userId: string): Promise<ValuesFromDB[] | undefined> => {
+  const { data }: PostgrestResponse<ValuesFromDB> = await supabase.from('data').select().eq('user', userId)
+  return data
+}
+// TODO pagination
