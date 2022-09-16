@@ -11,6 +11,7 @@ import { DateTime } from 'luxon'
 interface Values {
   weight: string
   steps: string
+  notes: string
 }
 
 interface CustomProps {
@@ -47,7 +48,8 @@ const getPostgresDate = (dateTime: DateTime): string => dateTime.toFormat('yyyy-
 const DataInput: FC<WithAuthPageProps> = ({userId}) => {
   const [values, setValues] = useState<Values>({
     weight: '',
-    steps: ''
+    steps: '',
+    notes: '',
   })
   const [selectedDate, setSelectedData] = useState<DateTime>(DateTime.now())
   
@@ -61,6 +63,7 @@ const DataInput: FC<WithAuthPageProps> = ({userId}) => {
         setValues({
           weight: data?.weight_kg ?? '',
           steps: data?.steps ?? '',
+          notes: data?.notes ?? '',
         })
       })
   }, [selectedDate])
@@ -88,6 +91,13 @@ const DataInput: FC<WithAuthPageProps> = ({userId}) => {
         name="numberformat"
         InputProps={{ inputComponent: NumberFormatCustom as any }}
       />
+      <TextField
+        label="Notes"
+        id="notes-input"
+        sx={{ m: 1, width: '12ch' }}
+        value={values.notes}
+        onChange={handleChange('notes')}
+      />
       <Button
         variant="text"
         onClick={() => {
@@ -97,6 +107,7 @@ const DataInput: FC<WithAuthPageProps> = ({userId}) => {
             userId,
             weight_kg: parseFloat(values.weight),
             steps: parseInt(values.steps),
+            notes: values.notes,
           })
           alert(`Weight: ${values.weight}, steps: ${values.steps} - submitted to DB`)
         }}

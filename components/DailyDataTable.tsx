@@ -110,4 +110,7 @@ const columns = [
   columnHelper.accessor('steps', {
     header: () => 'Steps',
   }),
+  columnHelper.accessor('notes', {
+    header: () => 'Notes',
+  }),
 ]

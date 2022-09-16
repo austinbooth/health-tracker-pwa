@@ -2,16 +2,19 @@ import supabase from './supabaseSingleton'
 import { PostgrestResponse } from '@supabase/supabase-js'
 import { ValuesFromDB } from './types'
 
-interface SubmitValuesToDbProps {userId: string, date: string, weight_kg: number, steps: number}
+interface SubmitValuesToDbProps {userId: string, date: string, weight_kg: number, steps: number, notes: string}
 export const submitValuesToDb = async ({
   userId,
   date, // yyyy-mm-dd
-  weight_kg, steps
+  weight_kg,
+  steps,
+  notes,
 }: SubmitValuesToDbProps): Promise<PostgrestResponse<undefined>> => await supabase.from('data').upsert({
     user: userId,
     date,
     weight_kg,
     steps,
+    notes,
 })
 
 export const getValuesForUserAndDate = async ({
