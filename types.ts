@@ -3,6 +3,7 @@ export interface ValuesFromDB {
     date: string,
     weight_kg: string | null
     steps: string | null
+    notes: string | null
 }
 
 export type Loading = {
