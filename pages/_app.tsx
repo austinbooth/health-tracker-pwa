@@ -1,11 +1,14 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import AuthProvider, { useAuth } from '../components/AuthContext'
+import AuthProvider from '../components/AuthContext'
+import QueryProvider from '../components/QueryProvider'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <AuthProvider>
-      <Component {...pageProps} />
+      <QueryProvider>
+        <Component {...pageProps} />
+      </QueryProvider>
     </AuthProvider>
   )
 }

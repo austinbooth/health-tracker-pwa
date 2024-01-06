@@ -2,7 +2,7 @@ import supabase from './supabaseSingleton'
 import { PostgrestResponse } from '@supabase/supabase-js'
 import { ValuesFromDB } from './types'
 
-interface SubmitValuesToDbProps {userId: string, date: string, weight_kg: number, steps: number, notes: string}
+export interface SubmitValuesToDbProps {userId: string, date: string, weight_kg: number, steps: number, notes: string}
 export const submitValuesToDb = async ({
   userId,
   date, // yyyy-mm-dd

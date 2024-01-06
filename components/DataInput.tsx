@@ -1,9 +1,9 @@
-import { FC, useState, forwardRef, useEffect } from 'react'
+import { FC, useState, forwardRef } from 'react'
 import InputAdornment from '@mui/material/InputAdornment'
 import TextField from '@mui/material/TextField'
 import NumberFormat, { InputAttributes } from 'react-number-format'
 import Button from '@mui/material/Button'
-import { submitValuesToDb, getValuesForUserAndDate } from '../subabaseUtils'
+import { useGetValuesForUserAndDateQuery, useUpdateValuesForUserAndDateMutation } from '../queryUtils'
 import { WithAuthPageProps } from '../HOCs/withAuth'
 import DateDisplayWithControls from './DateDisplayWithControls'
 import { DateTime } from 'luxon'
@@ -46,31 +46,26 @@ const NumberFormatCustom = forwardRef<
 const getPostgresDate = (dateTime: DateTime): string => dateTime.toFormat('yyyy-LL-dd') // yyyy-mm-dd
 
 const DataInput: FC<WithAuthPageProps> = ({userId}) => {
-  const [values, setValues] = useState<Values>({
+  const [newValues, setNewValues] = useState<Values>({
     weight: '',
     steps: '',
     notes: '',
   })
-  const [selectedDate, setSelectedData] = useState<DateTime>(DateTime.now())
+  const [selectedDate, setSelectedDate] = useState<DateTime>(DateTime.now())
   
   const handleChange = (prop: keyof Values) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValues((current) => ({ ...current, [prop]: event.target.value }))
-  }
-  
-  useEffect(() => {
-    getValuesForUserAndDate({ userId, date: getPostgresDate(selectedDate)})
-      .then((data) => {
-        setValues({
-          weight: data?.weight_kg ?? '',
-          steps: data?.steps ?? '',
-          notes: data?.notes ?? '',
-        })
-      })
-  }, [selectedDate])
+    setNewValues((current) => ({ ...current, [prop]: event.target.value }))
+  } 
 
+  const { data: values, isLoading, isError } = useGetValuesForUserAndDateQuery({ userId, date: getPostgresDate(selectedDate) })
+  const updateValuesForUserAndDateMutation = useUpdateValuesForUserAndDateMutation()
+
+  if (isLoading) return <div>Loading...</div>
+  if (isError) return <div>Error fetching data</div>
+  
   return (
     <>
-      <DateDisplayWithControls selectedDate={selectedDate} setSelectedDate={setSelectedData} />
+      <DateDisplayWithControls selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
       <TextField
         label="Weight"
         id="weight-input"
@@ -79,14 +74,14 @@ const DataInput: FC<WithAuthPageProps> = ({userId}) => {
           endAdornment: <InputAdornment position="end">kg</InputAdornment>,
         }}
         sx={{ m: 1, width: '12ch' }}
-        value={values.weight}
+        value={newValues.weight.length ? newValues.weight : values?.weight_kg ?? ''}
         onChange={handleChange('weight')}
       />
       <TextField
         label="Steps"
         id="steps-input"
         sx={{ m: 1, width: '12ch' }}
-        value={values.steps}
+        value={newValues.steps.length ? newValues.steps : values?.steps  ?? ''}
         onChange={handleChange('steps')}
         name="numberformat"
         InputProps={{ inputComponent: NumberFormatCustom as any }}
@@ -95,21 +90,25 @@ const DataInput: FC<WithAuthPageProps> = ({userId}) => {
         label="Notes"
         id="notes-input"
         sx={{ m: 1, width: '12ch' }}
-        value={values.notes}
+        value={newValues.notes.length ? newValues.notes : values?.notes ?? ''}
         onChange={handleChange('notes')}
       />
       <Button
         variant="text"
         onClick={() => {
           const date = getPostgresDate(selectedDate)
-          submitValuesToDb({
-            date,
-            userId,
-            weight_kg: parseFloat(values.weight),
-            steps: parseInt(values.steps),
-            notes: values.notes,
-          })
-          alert(`Weight: ${values.weight}, steps: ${values.steps} - submitted to DB`)
+          const weight_kg = newValues.weight.length ? parseFloat(newValues.weight) : parseFloat(values?.weight_kg ?? '')
+          const steps = newValues.steps.length ? parseInt(newValues.steps) : parseFloat(values?.steps ?? '')
+          const notes = newValues.notes.length ? newValues.notes : values?.notes ?? ''
+
+          updateValuesForUserAndDateMutation.mutate({
+              date,
+              userId,
+              weight_kg,
+              steps,
+              notes,
+            })
+          alert(`Weight: ${weight_kg}, steps: ${steps} - submitted to DB`)
         }}
       >
         Submit
