@@ -1,4 +1,4 @@
-import { FC, useState, forwardRef } from 'react'
+import { FC, useState, forwardRef, useEffect } from 'react'
 import InputAdornment from '@mui/material/InputAdornment'
 import TextField from '@mui/material/TextField'
 import NumberFormat, { InputAttributes } from 'react-number-format'
@@ -59,6 +59,14 @@ const DataInput: FC<WithAuthPageProps> = ({userId}) => {
 
   const { data: values, isLoading, isError } = useGetValuesForUserAndDateQuery({ userId, date: getPostgresDate(selectedDate) })
   const updateValuesForUserAndDateMutation = useUpdateValuesForUserAndDateMutation()
+
+  useEffect(() => {
+    setNewValues({
+      weight: '',
+      steps: '',
+      notes: '',
+    })
+  }, [selectedDate])
 
   if (isLoading) return <div>Loading...</div>
   if (isError) return <div>Error fetching data</div>
