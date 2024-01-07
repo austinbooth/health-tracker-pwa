@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import { FC } from 'react'
 import Head from 'next/head'
 import { useAuth } from '../components/AuthContext'
