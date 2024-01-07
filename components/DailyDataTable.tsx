@@ -1,8 +1,7 @@
-import { FC, useState, useEffect } from 'react'
-import { getValuesForUser } from '../subabaseUtils'
+import { FC } from 'react'
+import { useGetValuesForUser } from '../queryUtils'
 import { DateTime } from 'luxon'
-import { ValuesFromDB, State } from '../types'
-import Loading from './Loading'
+import { ValuesFromDB } from '../types'
 import {
   createColumnHelper,
   flexRender,
@@ -14,34 +13,16 @@ interface Props {
   userId: string
 }
 const DailyDataTable: FC<Props> = ({userId}) => {
-  const [result, setResult] = useState<State>({ state: 'Loading'})
-
-  useEffect(() => {
-    getValuesForUser(userId)
-      .then((data) => {
-        setResult({ state: 'Complete', data: data ?? []})
-      })
-      .catch((error: unknown) => {
-        setResult({
-          state: 'Errored',
-          error: error instanceof Error ? error : new Error('An unknown error occured')
-        })
-      })
-  }, [])
-
+  const { data, isError, isLoading } = useGetValuesForUser(userId)
+  
   const table = useReactTable({
-    data: result.state === 'Complete' ? result.data : [],
+    data: data ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
   })
 
-  if (result.state === 'Loading') {
-    return <Loading />
-  }
-
-  if (result.state === 'Errored') {
-    return <p>{`Error: ${result.error.message}`}</p>
-  }
+  if (isLoading) return <div>Loading...</div>
+  if (isError) return <div>Error fetching data</div>
 
   return (
     <div className='flex justify-center'>
@@ -101,7 +82,7 @@ const columnHelper = createColumnHelper<ValuesFromDB>()
 const columns = [
   columnHelper.accessor('date', {
     header: () => 'Date',
-    cell: info => DateTime.fromFormat(info.getValue(), 'yyyy-LL-dd').toFormat('d LLL'),  
+    cell: info => DateTime.fromFormat(info.getValue(), 'yyyy-LL-dd').toFormat('dd LLL yy'),  
   }),
   columnHelper.accessor('weight_kg', {
     header: () => 'Weight (kg)',
