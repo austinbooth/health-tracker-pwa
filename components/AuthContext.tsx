@@ -1,7 +1,7 @@
 import { FC, PropsWithChildren, createContext, useContext, useState, useEffect } from "react"
 import supabase from '../supabaseSingleton'
 import { Session, AuthError } from '@supabase/supabase-js'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 
 type Loading = {
   state: 'Loading'
@@ -38,6 +38,7 @@ const AuthContext = createContext<Auth | undefined>(undefined)
 
 const AuthProvider: FC<PropsWithChildren> = ({children}) => {
   const router = useRouter()
+  const pathname = usePathname()
   const [state, setState] = useState<AuthResult>({state: 'Loading'})
   useEffect(() => {
     supabase.auth.getSession().then(({data: { session }}) => {
@@ -46,13 +47,17 @@ const AuthProvider: FC<PropsWithChildren> = ({children}) => {
 
     const { subscription } = supabase.auth.onAuthStateChange((_event, session) => {
       console.log('>>>> auth state change')
-      session
-        ? (
-            setState({state: 'Authed', session}),
-            router.push('/')
-          )
-        : setState({state: 'NotAuthed'})
-
+      if (!session) {
+        setState({state: 'NotAuthed'})
+        if (pathname !== '/signin') {
+          router.push('/signin')
+        }
+      } else {
+        setState({state: 'Authed', session})
+        if (pathname === '/signin') {
+          router.push('/')
+        }
+      }
     }).data
     return subscription.unsubscribe
   }, [])
