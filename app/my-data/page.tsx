@@ -1,14 +1,6 @@
-'use client'
-
 import type { NextPage } from 'next'
-import withAuth from '../../HOCs/withAuth'
-import MyData from '../../components/MyData'
+import MyDataProtected from './MyDataProtected'
 
-const Home: NextPage = () => {
-  const MyDataProtected = withAuth(MyData)
-  return (
-    <MyDataProtected />
-  )
-}
+const Home: NextPage = () => <MyDataProtected />
 
 export default Home
