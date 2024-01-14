@@ -1,7 +1,7 @@
 import { FC, PropsWithChildren, createContext, useContext, useState, useEffect } from "react"
 import supabase from '../supabaseSingleton'
 import { Session, AuthError } from '@supabase/supabase-js'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 
 type Loading = {
   state: 'Loading'

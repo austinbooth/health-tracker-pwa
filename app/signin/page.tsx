@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import { useState } from 'react'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
-import { useAuth } from '../components/AuthContext'
+import { useAuth } from '../../components/AuthContext'
 
 const Signin: NextPage = () => {
   const [email, setEmail] = useState<string>('')

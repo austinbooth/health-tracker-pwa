@@ -1,9 +1,8 @@
 /* eslint-disable react/display-name */
 import { FC } from 'react'
-import Head from 'next/head'
 import { useAuth } from '../components/AuthContext'
 import SignOutButton from '../components/SignOutButton'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import Loading from '../components/Loading'
 
 export interface WithAuthPageProps {
@@ -26,12 +25,6 @@ const withAuth = (Page: FC<WithAuthPageProps>) => {
     
     return (
       <div className="px-8">
-        <Head>
-          <title>Health tracker</title>
-          <meta name="description" content="Track your weight etc" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-
         <header>
           <SignOutButton />
         </header>
