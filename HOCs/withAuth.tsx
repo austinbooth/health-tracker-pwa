@@ -1,6 +1,8 @@
 /* eslint-disable react/display-name */
 import { FC } from 'react'
 import { useAuth } from '../components/AuthContext'
+import HomeLinkButton from '../components/HomeLinkButton'
+import MyDataLinkButton from '../components/MyDataLinkButton'
 import SignOutButton from '../components/SignOutButton'
 import { useRouter } from 'next/navigation'
 import Loading from '../components/Loading'
@@ -26,6 +28,8 @@ const withAuth = (Page: FC<WithAuthPageProps>) => {
     return (
       <div className="px-8">
         <header>
+          <HomeLinkButton />
+          <MyDataLinkButton />
           <SignOutButton />
         </header>
 
