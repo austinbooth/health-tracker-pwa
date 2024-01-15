@@ -1,16 +1,13 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
+'use client'
 import AuthProvider from '../components/AuthContext'
 import QueryProvider from '../components/QueryProvider'
 
-function MyApp({ Component, pageProps }: AppProps) {
+export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <AuthProvider>
       <QueryProvider>
-        <Component {...pageProps} />
+        {children}
       </QueryProvider>
     </AuthProvider>
   )
 }
-
-export default MyApp

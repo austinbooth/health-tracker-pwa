@@ -1,5 +1,5 @@
 import supabase from './supabaseSingleton'
-import { PostgrestResponse } from '@supabase/supabase-js'
+import { PostgrestResponse, PostgrestSingleResponse } from '@supabase/supabase-js'
 import { ValuesFromDB } from './types'
 
 export interface SubmitValuesToDbProps {userId: string, date: string, weight_kg: number, steps: number, notes: string}
@@ -9,12 +9,12 @@ export const submitValuesToDb = async ({
   weight_kg,
   steps,
   notes,
-}: SubmitValuesToDbProps): Promise<PostgrestResponse<undefined>> => await supabase.from('data').upsert({
-    user: userId,
-    date,
-    weight_kg,
-    steps,
-    notes,
+}: SubmitValuesToDbProps): Promise<PostgrestSingleResponse<null>> => await supabase.from('data').upsert({
+  user: userId,
+  date,
+  weight_kg,
+  steps,
+  notes,
 })
 
 export const getValuesForUserAndDate = async ({
@@ -27,7 +27,7 @@ export const getValuesForUserAndDate = async ({
   }
 }
 
-export const getValuesForUser = async (userId: string): Promise<ValuesFromDB[] | undefined> => {
+export const getValuesForUser = async (userId: string): Promise<ValuesFromDB[] | null> => {
   const { data }: PostgrestResponse<ValuesFromDB> = await supabase.from('data').select().eq('user', userId)
   return data
 }
