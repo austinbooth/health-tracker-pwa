@@ -14,6 +14,12 @@ interface Props {
 }
 const DailyDataTable: FC<Props> = ({userId}) => {
   const { data, isError, isLoading } = useGetValuesForUser(userId)
+
+  data?.sort((a, b) => {
+    const aDate = DateTime.fromFormat(a.date, 'yyyy-LL-dd')
+    const bDate = DateTime.fromFormat(b.date, 'yyyy-LL-dd')
+    return aDate > bDate ? -1 : 1
+  })
   
   const table = useReactTable({
     data: data ?? [],
