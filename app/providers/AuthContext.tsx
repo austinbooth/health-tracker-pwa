@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren, createContext, useContext, useState, useEffect } from "react"
-import supabase from '../supabaseSingleton'
+import supabase from '../../supabaseSingleton'
 import { Session, AuthError } from '@supabase/supabase-js'
 import { useRouter, usePathname } from 'next/navigation'
 

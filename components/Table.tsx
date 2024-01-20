@@ -1,40 +1,26 @@
-import { FC } from 'react'
-import { useGetValuesForUser } from '../queryUtils'
-import { DateTime } from 'luxon'
-import { ValuesFromDB } from '../types'
 import {
-  createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
+  ColumnDef
 } from '@tanstack/react-table'
 
-interface Props {
-  userId: string
+interface Props<T> {
+  columns: ColumnDef<T, string>[]
+  data: T[]
 }
-const DailyDataTable: FC<Props> = ({userId}) => {
-  const { data, isError, isLoading } = useGetValuesForUser(userId)
 
-  data?.sort((a, b) => {
-    const aDate = DateTime.fromFormat(a.date, 'yyyy-LL-dd')
-    const bDate = DateTime.fromFormat(b.date, 'yyyy-LL-dd')
-    return aDate > bDate ? -1 : 1
-  })
-  
+function Table<T>({columns, data}: Props<T>) {
   const table = useReactTable({
     data: data ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
   })
-
-  if (isLoading) return <div>Loading...</div>
-  if (isError) return <div>Error fetching data</div>
-
   return (
     <div className='flex justify-center'>
       <table>
           <thead>
-            {table.getHeaderGroups().map(headerGroup => (
+            {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map(header => (
                   <th key={header.id} className="px-6">
@@ -81,23 +67,4 @@ const DailyDataTable: FC<Props> = ({userId}) => {
   )
 }
 
-export default DailyDataTable
-
-const columnHelper = createColumnHelper<ValuesFromDB>()
-
-const columns = [
-  columnHelper.accessor('date', {
-    header: () => 'Date',
-    cell: info => DateTime.fromFormat(info.getValue(), 'yyyy-LL-dd').toFormat('dd LLL yy'),  
-  }),
-  columnHelper.accessor('weight_kg', {
-    header: () => 'Weight (kg)',
-    cell: info => info.renderValue(),
-  }),
-  columnHelper.accessor('steps', {
-    header: () => 'Steps',
-  }),
-  columnHelper.accessor('notes', {
-    header: () => 'Notes',
-  }),
-]
+export default Table

@@ -1,6 +1,6 @@
 'use client'
-import AuthProvider from '../components/AuthContext'
-import QueryProvider from '../components/QueryProvider'
+import AuthProvider from './AuthContext'
+import QueryProvider from './QueryProvider'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
