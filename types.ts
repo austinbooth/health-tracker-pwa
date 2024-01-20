@@ -7,9 +7,9 @@ export interface ValuesFromDB {
 }
 
 export interface DataItemForTable {
-  averageWeight: number;
-  averageDailySteps: number;
+  averageWeight: string;
+  averageDailySteps: string;
   data: ValuesFromDB[];
   yearWeek: string;
-  changeInAverageWeight: number | null;
+  changeInAverageWeight: string | null;
 }
