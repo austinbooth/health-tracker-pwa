@@ -28,7 +28,11 @@ export const getValuesForUserAndDate = async ({
 }
 
 export const getValuesForUser = async (userId: string): Promise<ValuesFromDB[] | null> => {
-  const { data }: PostgrestResponse<ValuesFromDB> = await supabase.from('data').select().eq('user', userId)
+  const { data }: PostgrestResponse<ValuesFromDB> = await supabase
+    .from('data')
+    .select()
+    .eq('user', userId)
+    .order('date', { ascending: false })
   return data
 }
 // TODO pagination
