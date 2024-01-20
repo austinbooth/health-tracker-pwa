@@ -1,6 +1,6 @@
 import './globals.css'
 import { Metadata } from 'next'
-import { Providers } from './providers/Providers'
+import { Providers } from '../components/providers/Providers'
 
 export const metadata: Metadata = {
   title: 'Health Tracker',

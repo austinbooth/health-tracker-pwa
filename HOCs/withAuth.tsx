@@ -1,9 +1,9 @@
 /* eslint-disable react/display-name */
 import { FC } from 'react'
-import { useAuth } from '../app/providers/AuthContext'
-import HomeLinkButton from '../app/header/HomeLinkButton'
-import MyDataLinkButton from '../app/header/MyDataLinkButton'
-import SignOutButton from '../app/header/SignOutButton'
+import { useAuth } from '../components/providers/AuthContext'
+import HomeLinkButton from '../components/header/HomeLinkButton'
+import MyDataLinkButton from '../components/header/MyDataLinkButton'
+import SignOutButton from '../components/header/SignOutButton'
 import { useRouter } from 'next/navigation'
 import Loading from '../components/Loading'
 
