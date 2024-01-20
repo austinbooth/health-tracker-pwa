@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { ValuesFromDB } from '../../types'
+import { ValuesFromDB } from '../../../types'
 
 interface GroupedData {
   [yearWeek: string]: ValuesFromDB[]

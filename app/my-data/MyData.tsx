@@ -1,5 +1,5 @@
 import { FC, useState } from 'react'
-import { WithAuthPageProps } from '../HOCs/withAuth'
+import { WithAuthPageProps } from '../../HOCs/withAuth'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Box from '@mui/material/Box'

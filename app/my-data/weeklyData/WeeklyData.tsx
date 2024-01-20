@@ -1,10 +1,10 @@
-import { FC } from 'react'
-import { useGetValuesForUser } from '../../queryUtils'
+import { FC, useMemo } from 'react'
+import { useGetValuesForUser } from '../../../queryUtils'
 import getWeeklyAverages, { GroupedDataWithAverages } from './groupData'
 import { createColumnHelper, ColumnDef } from '@tanstack/react-table'
 import { DateTime } from 'luxon'
-import { DataItemForTable } from '../../types'
-import Table from '../Table'
+import { DataItemForTable } from '../../../types'
+import Table from '../../../components/Table'
 
 interface Props {
   userId: string
@@ -13,11 +13,10 @@ interface Props {
 const WeeklyData: FC<Props> = ({userId}) => {
   const { data, isError, isLoading } = useGetValuesForUser(userId)
 
-  const groupedAvgDataByWeek = getWeeklyAverages(data ?? [])
-  const dataEntries = Object.entries(groupedAvgDataByWeek)
-  const weightDecreases = calculateWeeklyWeightDecrease(groupedAvgDataByWeek)
+  const groupedAvgDataByWeek = useMemo(() => getWeeklyAverages(data ?? []), [data])
+  const weightDecreases = useMemo(() => calculateWeeklyWeightDecrease(groupedAvgDataByWeek), [groupedAvgDataByWeek])
 
-  const dataForTable: DataItemForTable[] = dataEntries.map(([yearWeek, averages]) => {
+  const dataForTable: DataItemForTable[] = useMemo(() => Object.entries(groupedAvgDataByWeek).map(([yearWeek, averages]) => {
     return {
       yearWeek,
       averageWeight: averages.averageWeight.toString(),
@@ -25,7 +24,7 @@ const WeeklyData: FC<Props> = ({userId}) => {
       data: averages.data,
       changeInAverageWeight: weightDecreases[yearWeek] ?? null,
     }
-  })
+  }), [groupedAvgDataByWeek, weightDecreases])
 
   if (isLoading) return <div>Loading...</div>
   if (isError) return <div>Error fetching data</div>
@@ -43,7 +42,7 @@ const columns: ColumnDef<DataItemForTable, string>[] = [
     cell: info => DateTime.fromObject({
       weekYear: parseInt(info.row.original.yearWeek.slice(0, 4)),
       weekNumber: parseInt(info.row.original.yearWeek.slice(5, 7)),
-    }).toFormat('dd-MM-yy'),
+    }).toFormat('dd LLL yy'),
   }),
   columnHelper.accessor('averageWeight', {
     header: () => 'Avg Weight (kg)',

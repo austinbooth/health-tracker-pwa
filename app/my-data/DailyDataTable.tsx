@@ -1,9 +1,9 @@
 import { FC } from 'react'
-import { useGetValuesForUser } from '../queryUtils'
+import { useGetValuesForUser } from '../../queryUtils'
 import { DateTime } from 'luxon'
-import { ValuesFromDB } from '../types'
+import { ValuesFromDB } from '../../types'
 import { createColumnHelper, ColumnDef } from '@tanstack/react-table'
-import Table from './Table'
+import Table from '../../components/Table'
 
 interface Props {
   userId: string

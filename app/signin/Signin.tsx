@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
-import { useAuth } from '../../components/AuthContext'
+import { useAuth } from '../providers/AuthContext'
 
 const Signin = () => {
   const [email, setEmail] = useState<string>('')

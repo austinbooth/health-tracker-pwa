@@ -1,4 +1,4 @@
-import { useAuth } from "./AuthContext"
+import { useAuth } from "../providers/AuthContext"
 import Button from '@mui/material/Button'
 
 export default function SignOutButton() {
