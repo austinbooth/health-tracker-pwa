@@ -5,6 +5,7 @@ import Tab from '@mui/material/Tab'
 import Box from '@mui/material/Box'
 import DailyDataTable from './DailyDataTable'
 import WeeklyData from './weeklyData/WeeklyData'
+import AvgWeeklyWeightGraph from './AvgWeeklyWeightGraph'
 
 const DataInput: FC<WithAuthPageProps> = ({userId}) => {
   const [activeTab, setActiveTab] = useState(0)
@@ -29,7 +30,7 @@ const DataInput: FC<WithAuthPageProps> = ({userId}) => {
         <WeeklyData userId={userId} />
       </TabPanel>
       <TabPanel value={activeTab} index={2}>
-        Item Three
+        <AvgWeeklyWeightGraph userId={userId} />
       </TabPanel>
     </Box>
   )
