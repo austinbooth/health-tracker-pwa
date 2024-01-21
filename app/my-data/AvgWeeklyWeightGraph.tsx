@@ -8,7 +8,7 @@ interface Props {
   userId: string
 }
 
-const WeightLossGraph: FC<Props> = ({ userId }) => {
+const AvgWeeklyWeightGraph: FC<Props> = ({ userId }) => {
   const { data, isError, isLoading } = useGetValuesForUser(userId)
 
   const graphData = useMemo(() => processDataForGraph(getWeeklyAverages(data ?? [])), [data])
@@ -18,7 +18,7 @@ const WeightLossGraph: FC<Props> = ({ userId }) => {
 
   return (
     <div style={{ height: '400px' }}>
-      <p className="text-center text-base">Avg weekly weight loss</p>
+      <p className="text-center text-base">Avg weekly weight</p>
       <ResponsiveLine
         data={graphData}
         margin={{ top: 20, right: 10, bottom: 50, left: 50 }}
@@ -56,7 +56,7 @@ const WeightLossGraph: FC<Props> = ({ userId }) => {
 
 }
 
-export default WeightLossGraph
+export default AvgWeeklyWeightGraph
 
 function processDataForGraph(data: GroupedDataWithAverages): {id: string, data: {x: string, y: number}[]}[] {
   const flatData = Object.entries(data).map(([yearWeek, weekData]) => ({
