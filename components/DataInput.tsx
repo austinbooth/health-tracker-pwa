@@ -7,6 +7,7 @@ import { useGetValuesForUserAndDateQuery, useUpdateValuesForUserAndDateMutation 
 import { WithAuthPageProps } from '../HOCs/withAuth'
 import DateDisplayWithControls from './DateDisplayWithControls'
 import { DateTime } from 'luxon'
+import WeightLossStats from './WeightLossStats'
 
 interface Values {
   weight: string
@@ -73,6 +74,7 @@ const DataInput: FC<WithAuthPageProps> = ({userId}) => {
   
   return (
     <>
+      <WeightLossStats userId={userId} />
       <DateDisplayWithControls selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
       <TextField
         label="Weight"

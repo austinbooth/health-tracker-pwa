@@ -55,7 +55,7 @@ const columns: ColumnDef<DataItemForTable, string>[] = [
   }),
 ]
 
-function calculateWeeklyWeightDecrease(data: GroupedDataWithAverages): {[yearWeek: string]: string} {
+export function calculateWeeklyWeightDecrease(data: GroupedDataWithAverages): {[yearWeek: string]: string} {
   let weightDecreases: {[yearWeek: string]: string} = {}
   
   const sortedWeeks = Object.keys(data).sort((a, b) => a.localeCompare(b))
