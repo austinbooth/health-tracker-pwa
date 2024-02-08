@@ -65,7 +65,9 @@ function processDataForGraph(data: GroupedDataWithAverages): {id: string, data: 
       weekNumber: parseInt(yearWeek.slice(5, 7)),
     }).toFormat('dd-MM-yy'),
     y: weekData.averageWeight,
-  })).sort((a, b) => a.x.localeCompare(b.x))
+  })).sort((a, b) => {
+    return DateTime.fromFormat(a.x, 'dd-MM-yy').toMillis() - DateTime.fromFormat(b.x, 'dd-MM-yy').toMillis()
+  })
 
   return [{
     id: 'Weight',
