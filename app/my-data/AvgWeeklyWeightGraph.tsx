@@ -58,13 +58,13 @@ const AvgWeeklyWeightGraph: FC<Props> = ({ userId }) => {
 
 export default AvgWeeklyWeightGraph
 
-function processDataForGraph(data: GroupedDataWithAverages): {id: string, data: {x: string, y: number}[]}[] {
-  const flatData = Object.entries(data).map(([yearWeek, weekData]) => ({
+function processDataForGraph(data: GroupedDataWithAverages): {id: string, data: {x: string, y: number | null}[]}[] {
+  const flatData = Object.entries(data).map(([yearWeek, weekData], index, arr) => ({
     x: DateTime.fromObject({
       weekYear: parseInt(yearWeek.slice(0, 4)),
       weekNumber: parseInt(yearWeek.slice(5, 7)),
     }).toFormat('dd-MM-yy'),
-    y: weekData.averageWeight,
+    y: weekData.averageWeight ?? arr[index - 1][1].averageWeight,
   })).sort((a, b) => {
     return DateTime.fromFormat(a.x, 'dd-MM-yy').toMillis() - DateTime.fromFormat(b.x, 'dd-MM-yy').toMillis()
   })

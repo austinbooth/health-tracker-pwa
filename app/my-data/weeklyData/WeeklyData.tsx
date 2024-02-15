@@ -19,7 +19,7 @@ const WeeklyData: FC<Props> = ({userId}) => {
   const dataForTable: DataItemForTable[] = useMemo(() => Object.entries(groupedAvgDataByWeek).map(([yearWeek, averages]) => {
     return {
       yearWeek,
-      averageWeight: averages.averageWeight.toString(),
+      averageWeight: averages.averageWeight?.toString() ?? null,
       averageDailySteps: averages.averageDailySteps.toString(),
       data: averages.data,
       changeInAverageWeight: weightDecreases[yearWeek] ?? null,
@@ -55,8 +55,8 @@ const columns: ColumnDef<DataItemForTable, string>[] = [
   }),
 ]
 
-export function calculateWeeklyWeightDecrease(data: GroupedDataWithAverages): {[yearWeek: string]: string} {
-  let weightDecreases: {[yearWeek: string]: string} = {}
+export function calculateWeeklyWeightDecrease(data: GroupedDataWithAverages): {[yearWeek: string]: string | null} {
+  let weightDecreases: {[yearWeek: string]: string | null} = {}
   
   const sortedWeeks = Object.keys(data).sort((a, b) => a.localeCompare(b))
 
@@ -64,9 +64,14 @@ export function calculateWeeklyWeightDecrease(data: GroupedDataWithAverages): {[
     const currentWeek = sortedWeeks[i]
     const previousWeek = sortedWeeks[i - 1]
 
-    const decrease = data[previousWeek].averageWeight - data[currentWeek].averageWeight
-    weightDecreases[currentWeek] = parseFloat(decrease.toFixed(1)).toString()
+    const decrease = calculateDecrease(data[previousWeek].averageWeight, data[currentWeek].averageWeight)
+    weightDecreases[currentWeek] = decrease?.toFixed(1) ?? null;
   }
 
   return weightDecreases
+}
+
+function calculateDecrease(previous: number | null, current: number | null): number | null {
+  if (previous === null || current === null) return null
+  return previous - current
 }

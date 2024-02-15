@@ -26,24 +26,30 @@ const groupByWeek = (data: ValuesFromDB[]): GroupedData => {
 
 export interface GroupedDataWithAverages {
   [yearWeek: string]: {
-    averageWeight: number,
+    averageWeight: number | null,
     averageDailySteps: number,
     data: ValuesFromDB[],
   }
+}
+
+function calculateAverageWeight(data: ValuesFromDB[]): number | null {
+  let numberOfNonNullWeightValues = 0
+  let sum = 0
+  data.forEach(value => {
+    if (value.weight_kg !== null) {
+      sum += parseFloat(value.weight_kg)
+      numberOfNonNullWeightValues++;
+    }
+  })
+  
+  return numberOfNonNullWeightValues > 0 ? sum / numberOfNonNullWeightValues : null;
 }
 
 const calculateAverages = (data: GroupedData): GroupedDataWithAverages => {
   const currentYearWeek = `${DateTime.now().year}-${DateTime.now().weekNumber}`
   const groupedDataWithAverages: GroupedDataWithAverages = {}
   Object.entries(data).forEach(([yearWeek, valuesFromDb]) => {
-    let numberOfNonNullWeightValues = 0
-    const averageWeight = valuesFromDb.reduce((acc, value) => {
-      if (value.weight_kg) {
-        numberOfNonNullWeightValues++
-        return acc + parseFloat(value.weight_kg)
-      }
-      return acc
-    }, 0) / numberOfNonNullWeightValues
+    const averageWeight = calculateAverageWeight(valuesFromDb)
 
     const averageDailySteps = valuesFromDb.reduce((acc, value) => {
       if (value.steps) {
@@ -53,7 +59,7 @@ const calculateAverages = (data: GroupedData): GroupedDataWithAverages => {
     }, 0) / (yearWeek === currentYearWeek ? DateTime.now().weekday : 7)
 
     groupedDataWithAverages[yearWeek] = {
-      averageWeight: parseFloat(averageWeight.toFixed(1)),
+      averageWeight: averageWeight === null ? null : parseFloat(averageWeight.toFixed(1)),
       averageDailySteps: Math.round(averageDailySteps),
       data: valuesFromDb,
     }
