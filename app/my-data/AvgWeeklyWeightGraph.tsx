@@ -28,12 +28,9 @@ const AvgWeeklyWeightGraph: FC<Props> = ({ userId }) => {
         axisTop={null}
         axisRight={null}
         axisBottom={{
-          tickSize: 5,
-          tickPadding: 5,
+          tickSize: 0,
+          tickPadding: 8,
           tickRotation: -45,
-          legend: 'Week',
-          legendOffset: 36,
-          legendPosition: 'middle',
         }}
         axisLeft={{
           tickSize: 5,
