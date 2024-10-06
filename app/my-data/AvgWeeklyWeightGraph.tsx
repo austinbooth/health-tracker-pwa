@@ -28,12 +28,9 @@ const AvgWeeklyWeightGraph: FC<Props> = ({ userId }) => {
         axisTop={null}
         axisRight={null}
         axisBottom={{
-          tickSize: 5,
-          tickPadding: 5,
+          tickSize: 0,
+          tickPadding: 8,
           tickRotation: -45,
-          legend: 'Week',
-          legendOffset: 36,
-          legendPosition: 'middle',
         }}
         axisLeft={{
           tickSize: 5,
@@ -58,13 +55,13 @@ const AvgWeeklyWeightGraph: FC<Props> = ({ userId }) => {
 
 export default AvgWeeklyWeightGraph
 
-function processDataForGraph(data: GroupedDataWithAverages): {id: string, data: {x: string, y: number}[]}[] {
-  const flatData = Object.entries(data).map(([yearWeek, weekData]) => ({
+function processDataForGraph(data: GroupedDataWithAverages): {id: string, data: {x: string, y: number | null}[]}[] {
+  const flatData = Object.entries(data).map(([yearWeek, weekData], index, arr) => ({
     x: DateTime.fromObject({
       weekYear: parseInt(yearWeek.slice(0, 4)),
       weekNumber: parseInt(yearWeek.slice(5, 7)),
     }).toFormat('dd-MM-yy'),
-    y: weekData.averageWeight,
+    y: weekData.averageWeight ?? arr[index - 1][1].averageWeight,
   })).sort((a, b) => {
     return DateTime.fromFormat(a.x, 'dd-MM-yy').toMillis() - DateTime.fromFormat(b.x, 'dd-MM-yy').toMillis()
   })

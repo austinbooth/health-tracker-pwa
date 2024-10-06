@@ -16,7 +16,7 @@ const WeightLossStats: FC<WeightLossStatsProps> = ({userId}) => {
 
   const totalLoss = useMemo(() => {
     return sortedWeeks.reduce((acc, week) => {
-      return acc + parseFloat(weightDecreases[week])
+      return acc + parseFloat(weightDecreases[week] ?? '0')
     }, 0).toFixed(1)
   }, [weightDecreases, sortedWeeks])
   
