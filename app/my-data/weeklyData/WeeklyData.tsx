@@ -57,8 +57,17 @@ const columns: ColumnDef<DataItemForTable, string>[] = [
 
 export function calculateWeeklyWeightDecrease(data: GroupedDataWithAverages): {[yearWeek: string]: string | null} {
   let weightDecreases: {[yearWeek: string]: string | null} = {}
-  
-  const sortedWeeks = Object.keys(data).sort((a, b) => a.localeCompare(b))
+
+  const sortedWeeks = Object.keys(data).sort((a, b) => {
+    const [yearA, weekA] = a.split('-').map(Number);
+    const [yearB, weekB] = b.split('-').map(Number);
+    
+    if (yearA !== yearB) {
+      return yearA - yearB;
+    }
+    
+    return weekA - weekB;
+  })
 
   for (let i = 1; i < sortedWeeks.length; i++) {
     const currentWeek = sortedWeeks[i]
