@@ -36,6 +36,19 @@ export type Auth = {
 
 const AuthContext = createContext<Auth | undefined>(undefined)
 
+const getRedirectUrl = () => {
+  let url =
+    process?.env?.NEXT_PUBLIC_SITE_URL ??
+    process?.env?.NEXT_PUBLIC_VERCEL_URL ??
+    'http://localhost:3030'
+  // Make sure to include `https://` when not localhost.
+  // The URLs provided by Vercel don't include the protocol.
+  url = url.startsWith('http') ? url : `https://${url}`
+  // Make sure to include a trailing `/`.
+  url = url.endsWith('/') ? url : `${url}/`
+  return url
+}
+
 const AuthProvider: FC<PropsWithChildren> = ({children}) => {
   const router = useRouter()
   const pathname = usePathname()
@@ -65,7 +78,12 @@ const AuthProvider: FC<PropsWithChildren> = ({children}) => {
   const initiateSignIn = async (email: string) => {
     try {
       setState({state: 'Loading'})
-      const { error } = await supabase.auth.signInWithOtp({ email })
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: getRedirectUrl(),
+        },
+      })
       if (error) {
         setState({
           state: 'Error',
