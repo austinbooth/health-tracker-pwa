@@ -35,5 +35,6 @@ const columns: ColumnDef<ValuesFromDB, string>[] = [
   }),
   columnHelper.accessor('notes', {
     header: () => 'Notes',
+    cell: notes => notes.getValue().length < 10 ? notes.getValue() : <div onClick={() => alert(notes.getValue())}>{notes.getValue().slice(0, 9) + '...'}</div>,
   }),
 ]
